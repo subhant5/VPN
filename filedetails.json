@@ -2,194 +2,114 @@
   "ovpn_file":[
     {"id":0,"file":"
      
-     ##############################################
-# Sample client-side OpenVPN 2.0 config file #
-# for connecting to multi-client server.     #
-#                                            #
-# This configuration can be used by multiple #
-# clients, however each client should have   #
-# its own cert and key files.                #
-#                                            #
-# On Windows, you might want to rename this  #
-# file so it has a .ovpn extension           #
-##############################################
-
-# Specify that we are a client and that we
-# will be pulling certain config file directives
-# from the server.
-client
-
-# Use the same setting as you are using on
-# the server.
-# On most systems, the VPN will not function
-# unless you partially or fully disable
-# the firewall for the TUN/TAP interface.
-;dev tap
+     client
 dev tun
-
-# Windows needs the TAP-Win32 adapter name
-# from the Network Connections panel
-# if you have more than one.  On XP SP2,
-# you may need to disable the firewall
-# for the TAP adapter.
-;dev-node MyTap
-
-# Are we connecting to a TCP or
-# UDP server?  Use the same setting as
-# on the server.
-;proto tcp
 proto udp
-
-# The hostname/IP and port of the server.
-# You can have multiple remote entries
-# to load balance between the servers.
 remote 35.209.90.211 1194
-;remote my-server-2 1194
-
-# Choose a random host from the remote
-# list for load-balancing.  Otherwise
-# try hosts in the order specified.
-;remote-random
-
-# Keep trying indefinitely to resolve the
-# host name of the OpenVPN server.  Very useful
-# on machines which are not permanently connected
-# to the internet such as laptops.
 resolv-retry infinite
-
-# Most clients don't need to bind to
-# a specific local port number.
 nobind
-
-# Downgrade privileges after initialization (non-Windows only)
-user nobody
-group nogroup
-
-# Try to preserve some state across restarts.
 persist-key
 persist-tun
-
-# If you are connecting through an
-# HTTP proxy to reach the actual OpenVPN
-# server, put the proxy server/IP and
-# port number here.  See the man page
-# if your proxy server requires
-# authentication.
-;http-proxy-retry # retry on connection failures
-;http-proxy [proxy server] [proxy port #]
-
-# Wireless networks often produce a lot
-# of duplicate packets.  Set this flag
-# to silence duplicate packet warnings.
-;mute-replay-warnings
-
-# SSL/TLS parms.
-# See the server config file for more
-# description.  It's best to use
-# a separate .crt/.key file pair
-# for each client.  A single ca
-# file can be used for all clients.
-#ca ca.crt
-#cert client.crt
-#key client.key
-
-# Verify server certificate by checking that the
-# certicate has the correct key usage set.
-# This is an important precaution to protect against
-# a potential attack discussed here:
-#  http://openvpn.net/howto.html#mitm
-#
-# To use this feature, you will need to generate
-# your server certificates with the keyUsage set to
-#   digitalSignature, keyEncipherment
-# and the extendedKeyUsage to
-#   serverAuth
-# EasyRSA can do this for you.
 remote-cert-tls server
-
-# If a tls-auth key is used on the server
-# then every client must also have the key.
-tls-auth ta.key 1
-
-# Select a cryptographic cipher.
-# If the cipher option is used on the server
-# then you must also specify it here.
-# Note that v2.4 client/server will automatically
-# negotiate AES-256-GCM in TLS mode.
-# See also the ncp-cipher option in the manpage
+auth SHA512
 cipher AES-256-CBC
-auth SHA256
-key-direction 1
-# Enable compression on the VPN link.
-# Don't enable this unless it is also
-# enabled in the server config file.
-#comp-lzo
-
-# Set log file verbosity.
+ignore-unknown-option block-outside-dns
+block-outside-dns
 verb 3
-
-# Silence repeating messages
-;mute 20
 <ca>
 -----BEGIN CERTIFICATE-----
-MIIFHDCCBASgAwIBAgIUA6NBwtolokfWbd+m090VIkLew/kwDQYJKoZIhvcNAQEL
-BQAwgbIxCzAJBgNVBAYTAlVTMQ0wCwYDVQQIEwRJb3dhMRIwEAYDVQQHEwlJb3dh
-IENpdHkxEjAQBgNVBAoTCU1haGFkLXZwbjEQMA4GA1UECxMHUHJpdmF0ZTEVMBMG
-A1UEAxMMTWFoYWQtdnBuIENBMRcwFQYDVQQpEw5vcGVudnBuLXNlcnZlcjEqMCgG
-CSqGSIb3DQEJARYbc3ViaGFudGFyaXFidXR0NDdAZ21haWwuY29tMB4XDTIxMDMw
-MTE4NTAzNloXDTMxMDIyNzE4NTAzNlowgbIxCzAJBgNVBAYTAlVTMQ0wCwYDVQQI
-EwRJb3dhMRIwEAYDVQQHEwlJb3dhIENpdHkxEjAQBgNVBAoTCU1haGFkLXZwbjEQ
-MA4GA1UECxMHUHJpdmF0ZTEVMBMGA1UEAxMMTWFoYWQtdnBuIENBMRcwFQYDVQQp
-Ew5vcGVudnBuLXNlcnZlcjEqMCgGCSqGSIb3DQEJARYbc3ViaGFudGFyaXFidXR0
-NDdAZ21haWwuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA96Wr
-DsL/ZF+x7L18gpEqVBKSC1vmThNB4BxZmvwKb8ei1hLEW2ef1c50CPhEQa+x1IG3
-QYFN6/PXhz7f/S9YWA7vGDree1T09p+pKU6izExGMpXgOMNs7EN+6bOi5ieIcs50
-6+eyKCBhQp8cta5/cAInF4d/rmdcjwy8PP5X8SgZfmm/lvA92m0nlr1n95u5DNDV
-RAZfCgVK1DF6y/JSPwD4pZN/0blsOqM8svzt1MyJdzEOgqqsxnLy+MBJidjBWlAe
-FY03ZySyk2aWOPcv/nJEzLgrnV7ve6pOJ/HgA1vsYK0fa4y18ApeND+IYYsmbNEm
-U6TSQs7ASEuGhVaRTQIDAQABo4IBJjCCASIwHQYDVR0OBBYEFM8bTp2zI7rdmlNB
-2W0KANwHcwcBMIHyBgNVHSMEgeowgeeAFM8bTp2zI7rdmlNB2W0KANwHcwcBoYG4
-pIG1MIGyMQswCQYDVQQGEwJVUzENMAsGA1UECBMESW93YTESMBAGA1UEBxMJSW93
-YSBDaXR5MRIwEAYDVQQKEwlNYWhhZC12cG4xEDAOBgNVBAsTB1ByaXZhdGUxFTAT
-BgNVBAMTDE1haGFkLXZwbiBDQTEXMBUGA1UEKRMOb3BlbnZwbi1zZXJ2ZXIxKjAo
-BgkqhkiG9w0BCQEWG3N1YmhhbnRhcmlxYnV0dDQ3QGdtYWlsLmNvbYIUA6NBwtol
-okfWbd+m090VIkLew/kwDAYDVR0TBAUwAwEB/zANBgkqhkiG9w0BAQsFAAOCAQEA
-P1jIOzHkacy8Bm4rTxoihNF2iHnXOJLo5zWYs3zhwbHz0eVQN6pSfoCOu8+I1MYP
-Fj3M8U5CestOS+j/TCaop/GBEnqIDyF/KPyEf18NSpZOc1rD3bd9dGmmfpei+IS1
-kTaS6Bd4QOEX3wrEsiu+I0I+ycnXF2c6AgN/IBC9IvmrQ03r2D8egNsDaLc8bX1d
-fhE61z1CngtXXg9uxAdu/o8GM8VeL9DQ050jpwQC6AK26wmcZoX8v3N+plDtbW6L
-fsjAuLjJGyd3QPRpBSHAAqKnAjjXPtn4SB0JmAUOm1Ez0IwL/W1kBiewvgIrBLQD
-WsSBn30d4HmEGLPF7864pQ==
+MIIDQjCCAiqgAwIBAgIURjiv1PIU+ZsvLIoCZe6ijDpp7IkwDQYJKoZIhvcNAQEL
+BQAwEzERMA8GA1UEAwwIQ2hhbmdlTWUwHhcNMjEwMzAxMjIzMTM0WhcNMzEwMjI3
+MjIzMTM0WjATMREwDwYDVQQDDAhDaGFuZ2VNZTCCASIwDQYJKoZIhvcNAQEBBQAD
+ggEPADCCAQoCggEBAKss9lo5SYTEP3CdHFQJfigZl3H84/JMNhiwlwE2aBQ8Xq4V
+nqlvgUR6i3T1dy+ijm0dYewkDTvfiveS7uUu/CXwIMuSO3BAe0dwxD9Nwn7UApDl
+mWvzodkC0xbqhSoQkuysehMD7x5/HpOT22qByrrX5QEhxehOwiA61e4rAfoLzbe+
+mUwL3pq877tzDuOkGJ6eSJ/rLXIZ7hdlOtpx/VX9TSZsiRmqox/klZGgWn6kolUt
+2wmWaca1uh9YB+ms1VZoi5p4YgN05aWUSUqmrkjv+VRXi37osI04my/ay9Pt/8s0
+0Treckgwq2HeBbsju8ceg8zAYy8d0HZtmgr9/JcCAwEAAaOBjTCBijAdBgNVHQ4E
+FgQUzKXcRX0ivy+jAPiY/ZiWaZlbvwkwTgYDVR0jBEcwRYAUzKXcRX0ivy+jAPiY
+/ZiWaZlbvwmhF6QVMBMxETAPBgNVBAMMCENoYW5nZU1lghRGOK/U8hT5my8sigJl
+7qKMOmnsiTAMBgNVHRMEBTADAQH/MAsGA1UdDwQEAwIBBjANBgkqhkiG9w0BAQsF
+AAOCAQEApIxf+U0RUQqDCSMxnDjs8Wjenp389EaejruzbS64+WZUVhbn1qnaRzCg
+L+tRevDdtvqNknVAfU8mG7zpnZNfn4BA3fEy3zoa/oL5OTcy8RYluanp/MwAHEY8
+7LMEoVl1XCLJlfnEONhjBjsR4QKM6rMKrQSMOuPFCSznULoLauE9nghV5So/JxHj
+8vZEUrPUMBuBAaxcij8thU9500O/Em6y8Z1F6hV5rnoQ5ZR5MQ0HoKq7pwlCy2Pg
+8ustc9+83rhavktCo1TLcjPUyi+bPeF5dg6tX6MGo34/Mflw57CQj6gKF929AIyc
+47sm7V6XT9HeVzcAI8//VPK3U7w9MA==
 -----END CERTIFICATE-----
 </ca>
 <cert>
+-----BEGIN CERTIFICATE-----
+MIIDTjCCAjagAwIBAgIRAMlsze5V2KjRcQqfWJr6hWcwDQYJKoZIhvcNAQELBQAw
+EzERMA8GA1UEAwwIQ2hhbmdlTWUwHhcNMjEwMzAxMjIzMTM0WhcNMzEwMjI3MjIz
+MTM0WjAQMQ4wDAYDVQQDDAVtYWhhZDCCASIwDQYJKoZIhvcNAQEBBQADggEPADCC
+AQoCggEBAK/f/nxRXr3mUuitH2UX549Y5ceccMLpKlBokEXd6nCDAB3m5Jyyq2LN
+TqEk+2H+b6zCjFO5NzgIPphXRXxku0tAvjEzn/P9mYeEoyfP0f7XzG43GehPjZ+t
+54nfJQvGQWo+ctpLP4W6jW0Hz6fKUdQwsu423bK0bRL5W4qvyJyu++UUAS5sQqQ1
+9q1BaWn9FXBDC2X6XbYACdP1EUQ1XDcZAhWkoM721Vo7q0luUXSdY7pfvSymAbUW
+4nQXQuab8zMlKfrVgTXW6MqtkLKB5ms8Umx+epls5ty3hw98iUsbHNNLfiCJwwt5
+DtFaSbjgC/2l4WwtXVh1zgs5w+rgsnECAwEAAaOBnzCBnDAJBgNVHRMEAjAAMB0G
+A1UdDgQWBBQVA1W6ps6UcnaTMbj9fYAtcgRKZzBOBgNVHSMERzBFgBTMpdxFfSK/
+L6MA+Jj9mJZpmVu/CaEXpBUwEzERMA8GA1UEAwwIQ2hhbmdlTWWCFEY4r9TyFPmb
+LyyKAmXuoow6aeyJMBMGA1UdJQQMMAoGCCsGAQUFBwMCMAsGA1UdDwQEAwIHgDAN
+BgkqhkiG9w0BAQsFAAOCAQEAlyA7h62SGLft0RIo2J5zkWDwVZBLrOUmz/u4z0Ao
+HL97pKeZ3clVg96k5Ne6TD8IKKqdSqaJzKgqISgc8zsxyz6cxXdYg4FzOOeIT6e0
+8yz/zfPt+zMxWHFCc0ol6nM3FrtDRmlHfBJ6M62kZ3qtEDqpLyHJ+9SsIqiz29ra
+ltDYEkVIi0KzG/9B3YrSj5nTMjmUEX0GHh4vfvJMYNnW/ApSldrqX494cXxXpUMj
+SfzJbOy2+KJJj/RbwMKKgMdjJeBM93ust/j/qSzkjTP+8JwjeqWA82IvL0LUOPoh
+kwMSNKGvWWgf61ZCulX+YywRPjeVL/n0R5A9JHmqtgKneg==
+-----END CERTIFICATE-----
 </cert>
 <key>
+-----BEGIN PRIVATE KEY-----
+MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCv3/58UV695lLo
+rR9lF+ePWOXHnHDC6SpQaJBF3epwgwAd5uScsqtizU6hJPth/m+swoxTuTc4CD6Y
+V0V8ZLtLQL4xM5/z/ZmHhKMnz9H+18xuNxnoT42freeJ3yULxkFqPnLaSz+Fuo1t
+B8+nylHUMLLuNt2ytG0S+VuKr8icrvvlFAEubEKkNfatQWlp/RVwQwtl+l22AAnT
+9RFENVw3GQIVpKDO9tVaO6tJblF0nWO6X70spgG1FuJ0F0Lmm/MzJSn61YE11ujK
+rZCygeZrPFJsfnqZbObct4cPfIlLGxzTS34gicMLeQ7RWkm44Av9peFsLV1Ydc4L
+OcPq4LJxAgMBAAECggEAWiyczJzj2LX5GHd7O1gQT/0ig0AAyM7H9UZHgqsPgvSH
+4Mz7tiQdn6DoidLuWQYduBRf4qV6XG5Nuco1RFxZc3IUkiGIB4+lYkhtZwI1B1cZ
+6AC0ddokIRUHPDd/RRQ3ggPW23ntbeGClb6Fh+BCKGt3so/LB89ehXX4q5kJYNu0
+nmP8jxIARikQ7fEgzo35gbva3jtL87gdUsdibkJUaqzwFxHJ56TFQC6qHsa3Kxn9
+iiCCJNJHixc4C18sxFfPLuEzaXQHtKtzY8DsM56C2/hvwJA2rq4qWOYvYaN/mcVW
+SiD5FBFBvZLv8KProiTkYVZcqW9yrKkixdvhR47J6QKBgQDo7Bcv4VqlmmY2Zu2g
+T3r+Ve7GwvMCY35cLcKZ0P2NwGWc3uWuA6PgkDTO4EFIEAyn1bh3dDlSaba1lCxC
+HVNwtO75pPS9d8frDq1cZQhGTpU7GsJxlRLFZHNBHLoJtw+OC+RZIxoOVhJFY04b
+g2H5Y50V/7rsLZPTK4mJrBjjqwKBgQDBTPCa+PClKJSXjaMLMIzofphAefaYLABt
+tQhjM9sg9yPTIobt2LJ4qObcTvYrAek2IAB76LFXOnD9Dk5RaO8hyuXDw/iOaCxG
+zYGFzV7hajM6yKk5GUgRHLe1Qd1SVFTRUuPGhte/M2CelgvX2/w3pDzUYndBlLjA
+oTIZw4qmUwKBgCGahhHbUkeYCe0JVnkNXnI5FZTJZWPP1NgZpfypARulSUOjiMFd
+NxRb2bKK+gAaiKjiFZXuR6LTK4/wy53SO0qEYAHWQZTgJhCMcohk7xetmKwJRUo7
+tpSR1GrtaQ2jwnO81XnirYyp8ELge9FOWCExtOUKmv4d6TjLDDG3iXO3AoGATRW4
+saRqmwJm11U1WuX+m0y4vKWmkCKj/Rv/f0gTr76+u5j+Q+Vxrqp0fhDDHH2DmgED
+EGbIKef1XQUSeGanTkuSexIwkeG7HnUfnNM8bhoi2eNhkJKjaaeRHyhn8UgOFve+
+O9JUQTxk4HknuepRV4MYev3VXwLG9pKR3zJanV8CgYACzk053yHyzOzxEfOLoxQP
+1Zg487IrCQ1ezQ9DNZQRs/76aAKLJbA+JYQvKn9gVh2Ov6E3Ym1Oag5ONdU+8rpZ
+l4hi4eNiwfLHaLUOeLJOgbw9afxcgVWvQHJdmEV30JTLImhmVjKnekej7/bPDv0v
+h59Rzm+oGzUS1WPXFOGMEg==
+-----END PRIVATE KEY-----
 </key>
-<tls-auth>
-#
-# 2048 bit OpenVPN static key
-#
+<tls-crypt>
 -----BEGIN OpenVPN Static key V1-----
-3a2f06697ac485866733e9d74042761b
-870b9819c893f6b3fe434cf28a9681e4
-c40d23644f5ddfa54441133713b533f7
-b6bea75e24e58ebf0372376b5b479093
-f5219eb2ee7f1855025db3dae3ca1484
-a357f08ff01041e85d58674999b52b63
-6890f1167eb18b8d365b75135fd37d16
-586c646e3b4dae116f0431f4196dc0b1
-ad5f19d49ade79517138b186329f56ae
-9a80a7740a64d4be6fa731e123ac290c
-97a8ee8393f469843e0241194bcdc0c5
-2038ed02fdc6401b9328951db4dfa69a
-294001b3d7b6a529f65667948f2e23d5
-89e2069543e9ce538d2f03cd9fa906f9
-2641a3ec81cfa5cc480e5f430ace1c84
-ed5b7bd677988d878734170693cc679f
+5355979e2490b85f9bf9ab45b1144775
+9147445fddfe978b254068944bad87b1
+8f58ac6a96ae89965668ee53bdeb3145
+1d279a84cbe1d2b5fc80629066bfa889
+13696c666b7ebb771270607f514343a1
+d4a22e1644580a2e9acc15c6e4201150
+6aef57c3219722663570e14f68639d36
+0a145d7a23786a2d43987d1f817f61c5
+09bd1874a8a22d3627f0fef1cee2beac
+ca9d0eccd5c4375fb418fe164c24c7be
+4fcbccdbde3fa13094569d05984a9f86
+2a29fa9ed269b1c78935f1c45066ccf5
+4f805bd5b6e390d5b3867ec4ed59b8f2
+ddc2ba7de4127ad686c07983b64cb395
+6514d38774f06c348e16bee9733fe1b2
+c158927b7ae417e816a588455eb176a9
 -----END OpenVPN Static key V1-----
-</tls-auth>
-
+</tls-crypt>
 
 "},
     {"id":1,"file":""}]
